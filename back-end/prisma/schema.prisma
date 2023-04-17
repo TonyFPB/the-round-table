@@ -1,0 +1,63 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Player    Player[]
+}
+
+model Player {
+  id           Int         @id @default(autoincrement())
+  userId       Int
+  type         PlayerType
+  tableId      Int
+  playerFormId Int?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  User         User        @relation(fields: [userId], references: [id])
+  PlayerForm   PlayerForm? @relation(fields: [playerFormId], references: [id])
+  Table        Table       @relation(fields: [tableId], references: [id]) 
+}
+
+model Table {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  baseFormId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  BaseForm   BaseForm @relation(fields: [baseFormId], references: [id])
+  Player     Player[] 
+}
+
+model PlayerForm {
+  id        Int      @id @default(autoincrement())
+  form      Json[]   
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Player    Player[]
+}
+
+model BaseForm {
+  id        Int      @id @default(autoincrement())
+  form      Json[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Table     Table[]
+}
+
+enum PlayerType {
+  MASTER
+  ADVENTURER
+}
