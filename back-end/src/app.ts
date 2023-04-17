@@ -8,7 +8,6 @@ loadEnvs();
 
 const server = express()
 server
-  .use(cors())
   .use(express.json())
   .get("/health", async(req, res) => { res.send("OK!") })
   .use("/auth", authRouter)
@@ -19,3 +18,5 @@ server
 server.get("/", (req, res) => res.send("hellow world"));
 
 export default server;
+
+  // .use(cors())
