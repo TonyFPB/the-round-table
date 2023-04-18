@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express"
 import httpStatus from "http-status";
 
 export function validateBody(schema: ObjectSchema) {
+  console.log('oiiii')
   return (req: Request, res: Response, next: NextFunction): void => {
     const validate = schema.validate(req.body, { abortEarly: false });
     
